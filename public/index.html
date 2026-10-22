@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Reviewer</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f3a5f'/%3E%3Cpath d='M9 22V10h7.5a4 4 0 0 1 0 8H13' stroke='%23f4efe4' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">R</span>
+      <div>
+        <h1>Project Reviewer</h1>
+        <p>Structure, security, code quality and plagiarism checks for student GitHub projects.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel form-panel">
+      <form id="review-form" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password">
+          <label class="check"><input type="checkbox" id="remember"> Remember on this device</label>
+        </div>
+
+        <div class="field">
+          <label for="repoUrl">Student repository <span class="req">required</span></label>
+          <input id="repoUrl" name="repoUrl" type="url" placeholder="https://github.com/student/project" required spellcheck="false">
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="branch">Branch or commit</label>
+            <input id="branch" name="branch" type="text" placeholder="default branch" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="courseLevel">Course level</label>
+            <select id="courseLevel" name="courseLevel">
+              <option value="">Infer from project</option>
+              <option>1st year</option>
+              <option>2nd year</option>
+              <option>3rd year</option>
+              <option>Final year / thesis</option>
+              <option>Master's</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="model">Reviewer model</label>
+          <select id="model" name="model">
+            <option value="opus">Claude Opus: most thorough</option>
+            <option value="sonnet">Claude Sonnet: faster and cheaper</option>
+          </select>
+        </div>
+
+        <details class="group">
+          <summary>Plagiarism check <span class="hint">optional</span></summary>
+          <div class="field">
+            <label for="compareUrl">Compare with repository</label>
+            <input id="compareUrl" name="compareUrl" type="url" placeholder="https://github.com/other-student/project" spellcheck="false">
+          </div>
+          <div class="field">
+            <label for="starterUrl">Course starter code</label>
+            <input id="starterUrl" name="starterUrl" type="url" placeholder="https://github.com/course/template" spellcheck="false">
+            <small>Excluded from similarity, so a shared template isn't flagged.</small>
+          </div>
+        </details>
+
+        <details class="group">
+          <summary>Grading details <span class="hint">optional</span></summary>
+          <div class="field">
+            <label for="deadline">Submission deadline</label>
+            <input id="deadline" name="deadline" type="datetime-local">
+          </div>
+          <div class="field">
+            <label for="rubric">Rubric</label>
+            <textarea id="rubric" name="rubric" rows="5" placeholder="e.g. Functionality 40%, Code quality 25%, Security 20%, Documentation 15%"></textarea>
+          </div>
+          <div class="field">
+            <label for="notes">Notes for the reviewer</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="e.g. Assignment: REST API for a library system. Focus on authentication."></textarea>
+          </div>
+        </details>
+
+        <div class="actions">
+          <button type="submit" id="submit" class="btn primary">Review project</button>
+          <button type="button" id="cancel" class="btn" hidden>Cancel</button>
+        </div>
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+      </form>
+
+      <section class="recent" aria-labelledby="recent-title">
+        <h2 id="recent-title">Recent reviews</h2>
+        <ul id="recent-list"></ul>
+        <p id="recent-empty" class="muted">Reviews you run appear here, saved in this browser only.</p>
+      </section>
+    </aside>
+
+    <section class="panel report-panel" aria-live="polite">
+      <div class="report-head">
+        <div id="status" class="status" hidden><span class="spinner" aria-hidden="true"></span><span id="status-text"></span></div>
+        <div id="meta" class="meta" hidden></div>
+        <div id="toolbar" class="toolbar" hidden>
+          <button type="button" class="btn small" id="copy">Copy Markdown</button>
+          <button type="button" class="btn small" id="download">Download .md</button>
+          <button type="button" class="btn small" id="print">Print / PDF</button>
+        </div>
+      </div>
+
+      <div id="notice" class="notice" hidden></div>
+
+      <div id="empty" class="empty">
+        <h2>Paste a repository to begin</h2>
+        <p>The reviewer reads the code as an experienced professor would: it starts with strengths, explains each problem with the exact file and line, shows the corrected code, and scores the project for its course level.</p>
+        <ul>
+          <li>Add a second repository to check whether one copied the other.</li>
+          <li>Add the course starter code so shared templates aren't flagged.</li>
+          <li>Similarity findings are evidence for you to judge, never a verdict.</li>
+        </ul>
+      </div>
+
+      <article id="report" class="report" hidden></article>
+    </section>
+  </main>
+
+  <script src="markdown.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

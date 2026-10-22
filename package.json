@@ -1,0 +1,10 @@
+{
+  "name": "uni-project-reviewer-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Web tool that reviews student GitHub projects like an experienced professor, using Claude.",
+  "engines": {
+    "node": ">=20"
+  }
+}
